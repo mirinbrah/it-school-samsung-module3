@@ -1,7 +1,6 @@
 android {
     namespace "ru.samsung.gamestudio"
-    buildToolsVersion "34.0.0"
-    compileSdkVersion 34
+    compileSdkVersion 36
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -19,7 +18,7 @@ android {
     }
     defaultConfig {
         applicationId "ru.samsung.gamestudio"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 34
         versionCode 1
         versionName "1.0"
@@ -27,7 +26,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
