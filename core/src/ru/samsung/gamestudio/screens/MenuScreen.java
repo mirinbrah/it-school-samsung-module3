@@ -66,4 +66,13 @@ public class MenuScreen extends ScreenAdapter {
             }
         }
     }
+
+    @Override
+    public void dispose() {
+        backgroundView.dispose();
+        titleView.dispose();
+        startButtonView.dispose();
+        settingsButtonView.dispose();
+        exitButtonView.dispose();
+    }
 }

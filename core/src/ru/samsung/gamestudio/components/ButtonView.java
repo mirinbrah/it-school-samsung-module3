@@ -46,7 +46,6 @@ public class ButtonView extends View {
     @Override
     public void dispose() {
         texture.dispose();
-        if (bitmapFont != null) bitmapFont.dispose();
     }
 
 }

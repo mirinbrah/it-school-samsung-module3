@@ -106,4 +106,15 @@ public class SettingsScreen extends ScreenAdapter {
     private String translateStateToText(boolean state) {
         return state ? "ON" : "OFF";
     }
+
+    @Override
+    public void dispose() {
+        backgroundView.dispose();
+        titleTextView.dispose();
+        blackoutImageView.dispose();
+        returnButton.dispose();
+        musicSettingView.dispose();
+        soundSettingView.dispose();
+        clearSettingView.dispose();
+    }
 }

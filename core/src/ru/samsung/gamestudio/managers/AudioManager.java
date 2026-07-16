@@ -3,9 +3,10 @@ package ru.samsung.gamestudio.managers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.utils.Disposable;
 import ru.samsung.gamestudio.GameResources;
 
-public class AudioManager {
+public class AudioManager implements Disposable {
 
     public boolean isSoundOn;
     public boolean isMusicOn;
@@ -35,6 +36,13 @@ public class AudioManager {
 
         if (isMusicOn) backgroundMusic.play();
         else backgroundMusic.stop();
+    }
+
+    @Override
+    public void dispose() {
+        backgroundMusic.dispose();
+        shootSound.dispose();
+        explosionSound.dispose();
     }
 
 }

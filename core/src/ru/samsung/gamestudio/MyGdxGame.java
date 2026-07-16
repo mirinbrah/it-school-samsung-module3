@@ -60,6 +60,15 @@ public class MyGdxGame extends Game {
 
     @Override
     public void dispose() {
+        gameScreen.dispose();
+        menuScreen.dispose();
+        settingsScreen.dispose();
+
+        largeWhiteFont.dispose();
+        commonWhiteFont.dispose();
+        commonBlackFont.dispose();
+        audioManager.dispose();
+        world.dispose();
         batch.dispose();
     }
 

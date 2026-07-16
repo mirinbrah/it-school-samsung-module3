@@ -260,4 +260,24 @@ public class GameScreen extends ScreenAdapter {
         gameSession.startGame();
     }
 
+    @Override
+    public void dispose() {
+        shipObject.dispose();
+        for (TrashObject trash : trashArray) trash.dispose();
+        for (BulletObject bullet : bulletArray) bullet.dispose();
+
+        backgroundView.dispose();
+        topBlackoutView.dispose();
+        liveView.dispose();
+        scoreTextView.dispose();
+        pauseButton.dispose();
+        fullBlackoutView.dispose();
+        pauseTextView.dispose();
+        homeButton.dispose();
+        continueButton.dispose();
+        recordsTextView.dispose();
+        recordsListView.dispose();
+        homeButton2.dispose();
+    }
+
 }
