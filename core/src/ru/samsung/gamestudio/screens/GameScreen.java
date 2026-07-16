@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import ru.samsung.gamestudio.*;
@@ -11,6 +12,7 @@ import ru.samsung.gamestudio.components.*;
 import ru.samsung.gamestudio.managers.ContactManager;
 import ru.samsung.gamestudio.managers.MemoryManager;
 import ru.samsung.gamestudio.objects.BulletObject;
+import ru.samsung.gamestudio.objects.HeartObject;
 import ru.samsung.gamestudio.objects.ShipObject;
 import ru.samsung.gamestudio.objects.TrashObject;
 
@@ -24,6 +26,7 @@ public class GameScreen extends ScreenAdapter {
 
     ArrayList<TrashObject> trashArray;
     ArrayList<BulletObject> bulletArray;
+    ArrayList<HeartObject> heartArray;
 
     ContactManager contactManager;
     boolean resultSaved;
@@ -56,6 +59,7 @@ public class GameScreen extends ScreenAdapter {
 
         trashArray = new ArrayList<>();
         bulletArray = new ArrayList<>();
+        heartArray = new ArrayList<>();
 
         shipObject = new ShipObject(
                 GameSettings.SCREEN_WIDTH / 2, 150,
@@ -116,12 +120,7 @@ public class GameScreen extends ScreenAdapter {
 
         if (gameSession.state == GameState.PLAYING) {
             if (gameSession.shouldSpawnTrash()) {
-                TrashObject trashObject = new TrashObject(
-                        GameSettings.TRASH_WIDTH, GameSettings.TRASH_HEIGHT,
-                        GameResources.TRASH_IMG_PATH,
-                        myGdxGame.world
-                );
-                trashArray.add(trashObject);
+                spawnFallingObject();
             }
 
             if (shipObject.needToShoot()) {
@@ -142,6 +141,7 @@ public class GameScreen extends ScreenAdapter {
 
             updateTrash();
             updateBullets();
+            updateHearts();
             backgroundView.move();
             gameSession.updateScore();
             scoreTextView.setText("Score: " + gameSession.getScore());
@@ -211,6 +211,7 @@ public class GameScreen extends ScreenAdapter {
         myGdxGame.batch.begin();
         backgroundView.draw(myGdxGame.batch);
         for (TrashObject trash : trashArray) trash.draw(myGdxGame.batch);
+        for (HeartObject heart : heartArray) heart.draw(myGdxGame.batch);
         if (shipObject.isAlive()) shipObject.draw(myGdxGame.batch);
         explosionView.draw(myGdxGame.batch);
         for (BulletObject bullet : bulletArray) bullet.draw(myGdxGame.batch);
@@ -267,6 +268,35 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+    private void updateHearts() {
+        for (int i = 0; i < heartArray.size(); i++) {
+            HeartObject heart = heartArray.get(i);
+            if (heart.isCollected() || !heart.isInFrame()) {
+                myGdxGame.world.destroyBody(heart.body);
+                heart.dispose();
+                heartArray.remove(i--);
+            }
+        }
+    }
+
+    private void spawnFallingObject() {
+        if (MathUtils.random() < 0.1f) {
+            heartArray.add(new HeartObject(
+                    GameSettings.HEART_WIDTH,
+                    GameSettings.HEART_HEIGHT,
+                    GameResources.LIVE_IMG_PATH,
+                    myGdxGame.world
+            ));
+            return;
+        }
+        trashArray.add(new TrashObject(
+                GameSettings.TRASH_WIDTH,
+                GameSettings.TRASH_HEIGHT,
+                GameResources.TRASH_IMG_PATH,
+                myGdxGame.world
+        ));
+    }
+
     private void restartGame() {
 
         for (int i = 0; i < trashArray.size(); i++) {
@@ -286,6 +316,13 @@ public class GameScreen extends ScreenAdapter {
             myGdxGame.world.destroyBody(bullet.body);
             bullet.dispose();
             bulletArray.remove(i--);
+        }
+
+        for (int i = 0; i < heartArray.size(); i++) {
+            HeartObject heart = heartArray.get(i);
+            myGdxGame.world.destroyBody(heart.body);
+            heart.dispose();
+            heartArray.remove(i--);
         }
 
         shipObject = new ShipObject(
@@ -330,6 +367,7 @@ public class GameScreen extends ScreenAdapter {
         shipObject.dispose();
         for (TrashObject trash : trashArray) trash.dispose();
         for (BulletObject bullet : bulletArray) bullet.dispose();
+        for (HeartObject heart : heartArray) heart.dispose();
 
         backgroundView.dispose();
         topBlackoutView.dispose();

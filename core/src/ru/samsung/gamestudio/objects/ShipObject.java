@@ -70,4 +70,8 @@ public class ShipObject extends GameObject {
     public boolean isAlive() {
         return livesLeft > 0;
     }
+
+    public void heal() {
+        livesLeft = Math.min(livesLeft + 1, 5);
+    }
 }

@@ -26,9 +26,9 @@ public class LiveView extends View {
 
     @Override
     public void draw(SpriteBatch batch) {
-        if (leftLives > 0) batch.draw(texture, x + (texture.getWidth() + livePadding), y, width, height);
-        if (leftLives > 1) batch.draw(texture, x, y, width, height);
-        if (leftLives > 2) batch.draw(texture, x + 2 * (texture.getWidth() + livePadding), y, width, height);
+        for (int i = 0; i < leftLives; i++) {
+            batch.draw(texture, x + i * (width + livePadding), y, width, height);
+        }
     }
 
     @Override

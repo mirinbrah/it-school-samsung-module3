@@ -23,6 +23,7 @@ public class GameSettings {
     public static final short TRASH_BIT = 2;
     public static final short SHIP_BIT = 4;
     public static final short BULLET_BIT = 8;
+    public static final short HEART_BIT = 16;
 
     // Object sizes
 
@@ -32,6 +33,8 @@ public class GameSettings {
     public static final int TRASH_HEIGHT = 100;
     public static final int BULLET_WIDTH = 15;
     public static final int BULLET_HEIGHT = 45;
+    public static final int HEART_WIDTH = 66;
+    public static final int HEART_HEIGHT = 58;
 
 
 

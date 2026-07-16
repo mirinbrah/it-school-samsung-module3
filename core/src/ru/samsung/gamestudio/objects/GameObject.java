@@ -93,9 +93,13 @@ public class GameObject implements Disposable {
         if (cBits == GameSettings.TRASH_BIT) {
             return (short) (GameSettings.SHIP_BIT | GameSettings.BULLET_BIT);
         }
-        if (cBits == GameSettings.SHIP_BIT || cBits == GameSettings.BULLET_BIT) {
+        if (cBits == GameSettings.SHIP_BIT) {
+            return (short) (GameSettings.TRASH_BIT | GameSettings.HEART_BIT);
+        }
+        if (cBits == GameSettings.BULLET_BIT) {
             return GameSettings.TRASH_BIT;
         }
+        if (cBits == GameSettings.HEART_BIT) return GameSettings.SHIP_BIT;
         return 0;
     }
 
