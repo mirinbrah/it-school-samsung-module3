@@ -150,6 +150,8 @@ public class GameScreen extends ScreenAdapter {
 
     private void handleInput() {
         if (Gdx.input.isTouched()) {
+            boolean justTouched = Gdx.input.justTouched();
+
             myGdxGame.touch = myGdxGame.camera.unproject(
                     new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0),
                     myGdxGame.viewport.getScreenX(),
@@ -160,13 +162,16 @@ public class GameScreen extends ScreenAdapter {
 
             switch (gameSession.state) {
                 case PLAYING:
-                    if (pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                    if (justTouched && pauseButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                         gameSession.pauseGame();
+                        break;
                     }
                     shipObject.move(myGdxGame.touch);
                     break;
 
                 case PAUSED:
+                    if (!justTouched) break;
+
                     if (continueButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                         gameSession.resumeGame();
                     }
@@ -176,6 +181,7 @@ public class GameScreen extends ScreenAdapter {
                     break;
 
                 case ENDED:
+                    if (!justTouched) break;
 
                     if (homeButton2.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                         myGdxGame.setScreen(myGdxGame.menuScreen);
