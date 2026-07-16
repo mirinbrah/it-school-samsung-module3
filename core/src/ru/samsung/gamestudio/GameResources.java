@@ -19,6 +19,7 @@ public class GameResources {
     public static final String BULLET_IMG_PATH = "textures/bullet.png";
     public static final String SHIP_IMG_PATH = "textures/ship.png";
     public static final String TRASH_IMG_PATH = "textures/trash.png";
+    public static final String EXPLOSION_IMG_PATH = "textures/explosion.png";
 
     // Sounds and music for audio
 

@@ -27,6 +27,8 @@ public class GameScreen extends ScreenAdapter {
 
     ContactManager contactManager;
     boolean resultSaved;
+    boolean nameRequested;
+    ExplosionView explosionView;
 
     // PLAY state UI
     MovingBackgroundView backgroundView;
@@ -71,6 +73,7 @@ public class GameScreen extends ScreenAdapter {
                 46, 54,
                 GameResources.PAUSE_IMG_PATH
         );
+        explosionView = new ExplosionView(GameResources.EXPLOSION_IMG_PATH);
 
         fullBlackoutView = new ImageView(0, 0, GameResources.BLACKOUT_FULL_IMG_PATH);
         pauseTextView = new TextView(myGdxGame.largeWhiteFont, 282, 842, "Pause");
@@ -133,8 +136,8 @@ public class GameScreen extends ScreenAdapter {
             }
 
             if (!shipObject.isAlive()) {
+                explosionView.start(shipObject.getX(), shipObject.getY());
                 gameSession.endGame();
-                requestPlayerName();
             }
 
             updateTrash();
@@ -145,6 +148,11 @@ public class GameScreen extends ScreenAdapter {
             liveView.setLeftLives(shipObject.getLiveLeft());
 
             myGdxGame.stepWorld();
+        }
+
+        explosionView.update(delta);
+        if (gameSession.state == GameState.ENDED && !explosionView.isActive() && !nameRequested) {
+            requestPlayerName();
         }
 
         draw();
@@ -203,7 +211,8 @@ public class GameScreen extends ScreenAdapter {
         myGdxGame.batch.begin();
         backgroundView.draw(myGdxGame.batch);
         for (TrashObject trash : trashArray) trash.draw(myGdxGame.batch);
-        shipObject.draw(myGdxGame.batch);
+        if (shipObject.isAlive()) shipObject.draw(myGdxGame.batch);
+        explosionView.draw(myGdxGame.batch);
         for (BulletObject bullet : bulletArray) bullet.draw(myGdxGame.batch);
         topBlackoutView.draw(myGdxGame.batch);
         scoreTextView.draw(myGdxGame.batch);
@@ -215,7 +224,7 @@ public class GameScreen extends ScreenAdapter {
             pauseTextView.draw(myGdxGame.batch);
             homeButton.draw(myGdxGame.batch);
             continueButton.draw(myGdxGame.batch);
-        } else if (gameSession.state == GameState.ENDED) {
+        } else if (gameSession.state == GameState.ENDED && !explosionView.isActive()) {
             fullBlackoutView.draw(myGdxGame.batch);
             recordsTextView.draw(myGdxGame.batch);
             recordsListView.draw(myGdxGame.batch);
@@ -287,10 +296,12 @@ public class GameScreen extends ScreenAdapter {
         );
 
         resultSaved = false;
+        nameRequested = false;
         gameSession.startGame();
     }
 
     private void requestPlayerName() {
+        nameRequested = true;
         String currentName = MemoryManager.loadPlayerName();
         Gdx.input.getTextInput(new Input.TextInputListener() {
             @Override
@@ -325,6 +336,7 @@ public class GameScreen extends ScreenAdapter {
         liveView.dispose();
         scoreTextView.dispose();
         pauseButton.dispose();
+        explosionView.dispose();
         fullBlackoutView.dispose();
         pauseTextView.dispose();
         homeButton.dispose();
