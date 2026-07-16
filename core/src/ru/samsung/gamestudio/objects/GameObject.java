@@ -9,6 +9,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
+import ru.samsung.gamestudio.GameSettings;
 
 import static ru.samsung.gamestudio.GameSettings.SCALE;
 
@@ -78,6 +79,7 @@ public class GameObject implements Disposable {
         fixtureDef.density = 0.1f;
         fixtureDef.friction = 1f;
         fixtureDef.filter.categoryBits = cBits;
+        fixtureDef.filter.maskBits = getCollisionMask();
 
         Fixture fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
@@ -85,6 +87,16 @@ public class GameObject implements Disposable {
 
         body.setTransform(x * SCALE, y * SCALE, 0);
         return body;
+    }
+
+    private short getCollisionMask() {
+        if (cBits == GameSettings.TRASH_BIT) {
+            return (short) (GameSettings.SHIP_BIT | GameSettings.BULLET_BIT);
+        }
+        if (cBits == GameSettings.SHIP_BIT || cBits == GameSettings.BULLET_BIT) {
+            return GameSettings.TRASH_BIT;
+        }
+        return 0;
     }
 
 }
