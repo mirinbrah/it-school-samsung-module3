@@ -81,7 +81,13 @@ public class SettingsScreen extends ScreenAdapter {
 
     void handleInput() {
         if (Gdx.input.justTouched()) {
-            myGdxGame.touch = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            myGdxGame.touch = myGdxGame.camera.unproject(
+                    new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0),
+                    myGdxGame.viewport.getScreenX(),
+                    myGdxGame.viewport.getScreenY(),
+                    myGdxGame.viewport.getScreenWidth(),
+                    myGdxGame.viewport.getScreenHeight()
+            );
 
             if (returnButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                 myGdxGame.setScreen(myGdxGame.menuScreen);

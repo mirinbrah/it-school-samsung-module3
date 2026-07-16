@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import ru.samsung.gamestudio.managers.AudioManager;
 import ru.samsung.gamestudio.screens.GameScreen;
 import ru.samsung.gamestudio.screens.MenuScreen;
@@ -28,6 +30,7 @@ public class MyGdxGame extends Game {
     public Vector3 touch;
     public SpriteBatch batch;
     public OrthographicCamera camera;
+    public Viewport viewport;
     public AudioManager audioManager;
 
     public GameScreen gameScreen;
@@ -48,7 +51,12 @@ public class MyGdxGame extends Game {
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, GameSettings.SCREEN_WIDTH, GameSettings.SCREEN_HEIGHT);
+        viewport = new FitViewport(
+                GameSettings.SCREEN_WIDTH,
+                GameSettings.SCREEN_HEIGHT,
+                camera
+        );
+        viewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         audioManager = new AudioManager();
 
         gameScreen = new GameScreen(this);
@@ -56,6 +64,11 @@ public class MyGdxGame extends Game {
         settingsScreen = new SettingsScreen(this);
 
         setScreen(menuScreen);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
     }
 
     @Override

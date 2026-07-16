@@ -150,7 +150,13 @@ public class GameScreen extends ScreenAdapter {
 
     private void handleInput() {
         if (Gdx.input.isTouched()) {
-            myGdxGame.touch = myGdxGame.camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            myGdxGame.touch = myGdxGame.camera.unproject(
+                    new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0),
+                    myGdxGame.viewport.getScreenX(),
+                    myGdxGame.viewport.getScreenY(),
+                    myGdxGame.viewport.getScreenWidth(),
+                    myGdxGame.viewport.getScreenHeight()
+            );
 
             switch (gameSession.state) {
                 case PLAYING:
