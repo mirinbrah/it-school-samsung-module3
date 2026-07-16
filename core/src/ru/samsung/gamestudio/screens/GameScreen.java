@@ -235,7 +235,9 @@ public class GameScreen extends ScreenAdapter {
             }
 
             if (hasToBeDestroyed) {
-                myGdxGame.world.destroyBody(trashArray.get(i).body);
+                TrashObject trash = trashArray.get(i);
+                myGdxGame.world.destroyBody(trash.body);
+                trash.dispose();
                 trashArray.remove(i--);
             }
         }
@@ -244,7 +246,9 @@ public class GameScreen extends ScreenAdapter {
     private void updateBullets() {
         for (int i = 0; i < bulletArray.size(); i++) {
             if (bulletArray.get(i).hasToBeDestroyed()) {
-                myGdxGame.world.destroyBody(bulletArray.get(i).body);
+                BulletObject bullet = bulletArray.get(i);
+                myGdxGame.world.destroyBody(bullet.body);
+                bullet.dispose();
                 bulletArray.remove(i--);
             }
         }
@@ -253,12 +257,22 @@ public class GameScreen extends ScreenAdapter {
     private void restartGame() {
 
         for (int i = 0; i < trashArray.size(); i++) {
-            myGdxGame.world.destroyBody(trashArray.get(i).body);
+            TrashObject trash = trashArray.get(i);
+            myGdxGame.world.destroyBody(trash.body);
+            trash.dispose();
             trashArray.remove(i--);
         }
 
         if (shipObject != null) {
             myGdxGame.world.destroyBody(shipObject.body);
+            shipObject.dispose();
+        }
+
+        for (int i = 0; i < bulletArray.size(); i++) {
+            BulletObject bullet = bulletArray.get(i);
+            myGdxGame.world.destroyBody(bullet.body);
+            bullet.dispose();
+            bulletArray.remove(i--);
         }
 
         shipObject = new ShipObject(
@@ -268,7 +282,6 @@ public class GameScreen extends ScreenAdapter {
                 myGdxGame.world
         );
 
-        bulletArray.clear();
         gameSession.startGame();
     }
 

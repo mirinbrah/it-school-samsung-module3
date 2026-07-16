@@ -44,11 +44,13 @@ public class ShipObject extends GameObject {
         if (getY() <= (height / 2f)) {
             setY(height / 2);
         }
-        if (getX() < (-width / 2f)) {
-            setX(GameSettings.SCREEN_WIDTH);
+        if (getX() < (width / 2f)) {
+            setX(width / 2);
+            body.setLinearVelocity(0, body.getLinearVelocity().y);
         }
-        if (getX() > (GameSettings.SCREEN_WIDTH + width / 2f)) {
-            setX(0);
+        if (getX() > (GameSettings.SCREEN_WIDTH - width / 2f)) {
+            setX(GameSettings.SCREEN_WIDTH - width / 2);
+            body.setLinearVelocity(0, body.getLinearVelocity().y);
         }
     }
 
