@@ -230,7 +230,9 @@ public class GameScreen extends ScreenAdapter {
             boolean hasToBeDestroyed = !trashArray.get(i).isAlive() || !trashArray.get(i).isInFrame();
 
             if (!trashArray.get(i).isAlive()) {
-                gameSession.destructionRegistration();
+                if (trashArray.get(i).wasHitByBullet()) {
+                    gameSession.destructionRegistration();
+                }
                 if (myGdxGame.audioManager.isSoundOn) myGdxGame.audioManager.explosionSound.play(0.2f);
             }
 

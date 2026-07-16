@@ -11,6 +11,7 @@ public class TrashObject extends GameObject {
     private static final int paddingHorizontal = 30;
 
     private int livesLeft;
+    private boolean wasHitByBullet;
 
     public TrashObject(int width, int height, String texturePath, World world) {
         super(
@@ -24,6 +25,7 @@ public class TrashObject extends GameObject {
 
         body.setLinearVelocity(new Vector2(0, -GameSettings.TRASH_VELOCITY));
         livesLeft = 1;
+        wasHitByBullet = false;
     }
 
     public boolean isAlive() {
@@ -32,6 +34,15 @@ public class TrashObject extends GameObject {
 
     public boolean isInFrame() {
         return getY() + height / 2 > 0;
+    }
+
+    public boolean wasHitByBullet() {
+        return wasHitByBullet;
+    }
+
+    public void hitByBullet() {
+        wasHitByBullet = true;
+        hit();
     }
 
     @Override

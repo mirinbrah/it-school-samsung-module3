@@ -3,6 +3,7 @@ package ru.samsung.gamestudio.managers;
 import com.badlogic.gdx.physics.box2d.*;
 import ru.samsung.gamestudio.GameSettings;
 import ru.samsung.gamestudio.objects.GameObject;
+import ru.samsung.gamestudio.objects.TrashObject;
 
 public class ContactManager {
 
@@ -21,14 +22,16 @@ public class ContactManager {
                 int cDef = fixA.getFilterData().categoryBits;
                 int cDef2 = fixB.getFilterData().categoryBits;
 
-                if (cDef == GameSettings.TRASH_BIT && cDef2 == GameSettings.BULLET_BIT
-                        || cDef2 == GameSettings.TRASH_BIT && cDef == GameSettings.BULLET_BIT
-                        || cDef == GameSettings.TRASH_BIT && cDef2 == GameSettings.SHIP_BIT
+                if (cDef == GameSettings.TRASH_BIT && cDef2 == GameSettings.BULLET_BIT) {
+                    ((TrashObject) fixA.getUserData()).hitByBullet();
+                    ((GameObject) fixB.getUserData()).hit();
+                } else if (cDef2 == GameSettings.TRASH_BIT && cDef == GameSettings.BULLET_BIT) {
+                    ((GameObject) fixA.getUserData()).hit();
+                    ((TrashObject) fixB.getUserData()).hitByBullet();
+                } else if (cDef == GameSettings.TRASH_BIT && cDef2 == GameSettings.SHIP_BIT
                         || cDef2 == GameSettings.TRASH_BIT && cDef == GameSettings.SHIP_BIT) {
-
                     ((GameObject) fixA.getUserData()).hit();
                     ((GameObject) fixB.getUserData()).hit();
-
                 }
             }
 
