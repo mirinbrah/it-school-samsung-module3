@@ -1,6 +1,7 @@
 package ru.samsung.gamestudio.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
@@ -25,6 +26,7 @@ public class SettingsScreen extends ScreenAdapter {
     ButtonView returnButton;
     TextView musicSettingView;
     TextView soundSettingView;
+    TextView nameSettingView;
     TextView clearSettingView;
 
     public SettingsScreen(MyGdxGame myGdxGame) {
@@ -34,6 +36,11 @@ public class SettingsScreen extends ScreenAdapter {
         titleTextView = new TextView(myGdxGame.largeWhiteFont, 256, 956, "Settings");
         blackoutImageView = new ImageView(85, 365, GameResources.BLACKOUT_MIDDLE_IMG_PATH);
         clearSettingView = new TextView(myGdxGame.commonWhiteFont, 173, 599, "clear records");
+        nameSettingView = new TextView(
+                myGdxGame.commonWhiteFont,
+                173, 776,
+                "name: " + MemoryManager.loadPlayerName()
+        );
 
         musicSettingView = new TextView(
                 myGdxGame.commonWhiteFont,
@@ -58,6 +65,11 @@ public class SettingsScreen extends ScreenAdapter {
     }
 
     @Override
+    public void show() {
+        nameSettingView.setText("name: " + MemoryManager.loadPlayerName());
+    }
+
+    @Override
     public void render(float delta) {
 
         handleInput();
@@ -72,6 +84,7 @@ public class SettingsScreen extends ScreenAdapter {
         titleTextView.draw(myGdxGame.batch);
         blackoutImageView.draw(myGdxGame.batch);
         returnButton.draw(myGdxGame.batch);
+        nameSettingView.draw(myGdxGame.batch);
         musicSettingView.draw(myGdxGame.batch);
         soundSettingView.draw(myGdxGame.batch);
         clearSettingView.draw(myGdxGame.batch);
@@ -91,6 +104,9 @@ public class SettingsScreen extends ScreenAdapter {
 
             if (returnButton.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                 myGdxGame.setScreen(myGdxGame.menuScreen);
+            }
+            if (nameSettingView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                requestPlayerName();
             }
             if (clearSettingView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                 MemoryManager.saveTableOfRecords(new ArrayList<>());
@@ -113,12 +129,29 @@ public class SettingsScreen extends ScreenAdapter {
         return state ? "ON" : "OFF";
     }
 
+    private void requestPlayerName() {
+        String currentName = MemoryManager.loadPlayerName();
+        Gdx.input.getTextInput(new Input.TextInputListener() {
+            @Override
+            public void input(String text) {
+                String playerName = MemoryManager.normalizePlayerName(text);
+                MemoryManager.savePlayerName(playerName);
+                nameSettingView.setText("name: " + playerName);
+            }
+
+            @Override
+            public void canceled() {
+            }
+        }, "Player name", currentName, "Up to 8 characters");
+    }
+
     @Override
     public void dispose() {
         backgroundView.dispose();
         titleTextView.dispose();
         blackoutImageView.dispose();
         returnButton.dispose();
+        nameSettingView.dispose();
         musicSettingView.dispose();
         soundSettingView.dispose();
         clearSettingView.dispose();

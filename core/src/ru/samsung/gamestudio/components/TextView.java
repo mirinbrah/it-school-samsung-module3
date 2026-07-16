@@ -37,7 +37,6 @@ public class TextView extends View{
 
     @Override
     public void dispose() {
-        // BitmapFont is shared and owned by MyGdxGame.
     }
 
 }

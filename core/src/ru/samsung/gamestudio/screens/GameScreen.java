@@ -1,6 +1,7 @@
 package ru.samsung.gamestudio.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector3;
@@ -25,6 +26,7 @@ public class GameScreen extends ScreenAdapter {
     ArrayList<BulletObject> bulletArray;
 
     ContactManager contactManager;
+    boolean resultSaved;
 
     // PLAY state UI
     MovingBackgroundView backgroundView;
@@ -132,7 +134,7 @@ public class GameScreen extends ScreenAdapter {
 
             if (!shipObject.isAlive()) {
                 gameSession.endGame();
-                recordsListView.setRecords(MemoryManager.loadRecordsTable());
+                requestPlayerName();
             }
 
             updateTrash();
@@ -284,7 +286,32 @@ public class GameScreen extends ScreenAdapter {
                 myGdxGame.world
         );
 
+        resultSaved = false;
         gameSession.startGame();
+    }
+
+    private void requestPlayerName() {
+        String currentName = MemoryManager.loadPlayerName();
+        Gdx.input.getTextInput(new Input.TextInputListener() {
+            @Override
+            public void input(String text) {
+                saveResult(text);
+            }
+
+            @Override
+            public void canceled() {
+                saveResult(currentName);
+            }
+        }, "Game over", currentName, "Player name");
+    }
+
+    private void saveResult(String text) {
+        if (resultSaved) return;
+        String playerName = MemoryManager.normalizePlayerName(text);
+        MemoryManager.savePlayerName(playerName);
+        gameSession.saveResult(playerName);
+        recordsListView.setRecords(MemoryManager.loadRecordsTable());
+        resultSaved = true;
     }
 
     @Override

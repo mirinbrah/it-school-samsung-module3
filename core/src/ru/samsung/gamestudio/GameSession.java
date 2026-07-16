@@ -41,15 +41,15 @@ public class GameSession {
     public void endGame() {
         updateScore();
         state = GameState.ENDED;
-        ArrayList<Integer> recordsTable = MemoryManager.loadRecordsTable();
-        if (recordsTable == null) {
-            recordsTable = new ArrayList<>();
-        }
+    }
+
+    public void saveResult(String playerName) {
+        ArrayList<GameRecord> recordsTable = MemoryManager.loadRecordsTable();
         int foundIdx = 0;
         for (; foundIdx < recordsTable.size(); foundIdx++) {
-            if (recordsTable.get(foundIdx) < getScore()) break;
+            if (recordsTable.get(foundIdx).score < getScore()) break;
         }
-        recordsTable.add(foundIdx, getScore());
+        recordsTable.add(foundIdx, new GameRecord(playerName, getScore()));
         MemoryManager.saveTableOfRecords(recordsTable);
     }
 

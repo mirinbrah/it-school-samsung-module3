@@ -18,6 +18,7 @@ public class MenuScreen extends ScreenAdapter {
     MovingBackgroundView backgroundView;
     TextView titleView;
     ButtonView startButtonView;
+    ButtonView recordsButtonView;
     ButtonView settingsButtonView;
     ButtonView exitButtonView;
 
@@ -27,8 +28,9 @@ public class MenuScreen extends ScreenAdapter {
         backgroundView = new MovingBackgroundView(GameResources.BACKGROUND_IMG_PATH);
         titleView = new TextView(myGdxGame.largeWhiteFont, 180, 960, "Space Cleaner");
         startButtonView = new ButtonView(140, 646, 440, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, "start");
-        settingsButtonView = new ButtonView(140, 551, 440, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, "settings");
-        exitButtonView = new ButtonView(140, 456, 440, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, "exit");
+        recordsButtonView = new ButtonView(140, 551, 440, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, "records");
+        settingsButtonView = new ButtonView(140, 456, 440, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, "settings");
+        exitButtonView = new ButtonView(140, 361, 440, 70, myGdxGame.commonBlackFont, GameResources.BUTTON_LONG_BG_IMG_PATH, "exit");
     }
 
     @Override
@@ -46,6 +48,7 @@ public class MenuScreen extends ScreenAdapter {
         titleView.draw(myGdxGame.batch);
         exitButtonView.draw(myGdxGame.batch);
         settingsButtonView.draw(myGdxGame.batch);
+        recordsButtonView.draw(myGdxGame.batch);
         startButtonView.draw(myGdxGame.batch);
 
         myGdxGame.batch.end();
@@ -70,6 +73,9 @@ public class MenuScreen extends ScreenAdapter {
             if (settingsButtonView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
                 myGdxGame.setScreen(myGdxGame.settingsScreen);
             }
+            if (recordsButtonView.isHit(myGdxGame.touch.x, myGdxGame.touch.y)) {
+                myGdxGame.setScreen(myGdxGame.recordsScreen);
+            }
         }
     }
 
@@ -78,6 +84,7 @@ public class MenuScreen extends ScreenAdapter {
         backgroundView.dispose();
         titleView.dispose();
         startButtonView.dispose();
+        recordsButtonView.dispose();
         settingsButtonView.dispose();
         exitButtonView.dispose();
     }

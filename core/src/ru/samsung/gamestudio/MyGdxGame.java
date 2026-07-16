@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import ru.samsung.gamestudio.managers.AudioManager;
 import ru.samsung.gamestudio.screens.GameScreen;
 import ru.samsung.gamestudio.screens.MenuScreen;
+import ru.samsung.gamestudio.screens.RecordsScreen;
 import ru.samsung.gamestudio.screens.SettingsScreen;
 
 import static ru.samsung.gamestudio.GameSettings.*;
@@ -36,6 +37,7 @@ public class MyGdxGame extends Game {
     public GameScreen gameScreen;
     public MenuScreen menuScreen;
     public SettingsScreen settingsScreen;
+    public RecordsScreen recordsScreen;
 
     float accumulator = 0;
 
@@ -62,6 +64,7 @@ public class MyGdxGame extends Game {
         gameScreen = new GameScreen(this);
         menuScreen = new MenuScreen(this);
         settingsScreen = new SettingsScreen(this);
+        recordsScreen = new RecordsScreen(this);
 
         setScreen(menuScreen);
     }
@@ -76,6 +79,7 @@ public class MyGdxGame extends Game {
         gameScreen.dispose();
         menuScreen.dispose();
         settingsScreen.dispose();
+        recordsScreen.dispose();
 
         largeWhiteFont.dispose();
         commonWhiteFont.dispose();
