@@ -33,7 +33,9 @@ public class GameSession {
 
     public void resumeGame() {
         state = GameState.PLAYING;
-        sessionStartTime += TimeUtils.millis() - pauseStartTime;
+        long pauseDuration = TimeUtils.millis() - pauseStartTime;
+        sessionStartTime += pauseDuration;
+        nextTrashSpawnTime += pauseDuration;
     }
 
     public void endGame() {
