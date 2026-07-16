@@ -31,6 +31,7 @@ public class GameScreen extends ScreenAdapter {
     ContactManager contactManager;
     boolean resultSaved;
     boolean nameRequested;
+    boolean doubleScoreActive;
     ExplosionView explosionView;
 
     // PLAY state UI
@@ -119,6 +120,10 @@ public class GameScreen extends ScreenAdapter {
         handleInput();
 
         if (gameSession.state == GameState.PLAYING) {
+            doubleScoreActive = shipObject.getY() > GameSettings.SCREEN_HEIGHT / 3f;
+            gameSession.updateScore(doubleScoreActive);
+            scoreTextView.setColor(doubleScoreActive ? Color.RED : Color.WHITE);
+
             if (gameSession.shouldSpawnTrash()) {
                 spawnFallingObject();
             }
@@ -139,11 +144,10 @@ public class GameScreen extends ScreenAdapter {
                 gameSession.endGame();
             }
 
-            updateTrash();
+            updateTrash(doubleScoreActive);
             updateBullets();
             updateHearts();
             backgroundView.move();
-            gameSession.updateScore();
             scoreTextView.setText("Score: " + gameSession.getScore());
             liveView.setLeftLives(shipObject.getLiveLeft());
 
@@ -236,17 +240,21 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
-    private void updateTrash() {
+    private void updateTrash(boolean doubleScore) {
         for (int i = 0; i < trashArray.size(); i++) {
 
-            boolean hasToBeDestroyed = !trashArray.get(i).isAlive() || !trashArray.get(i).isInFrame();
+            boolean isDestroyed = !trashArray.get(i).isAlive();
+            boolean isMissed = !isDestroyed && !trashArray.get(i).isInFrame();
+            boolean hasToBeDestroyed = isDestroyed || isMissed;
 
-            if (!trashArray.get(i).isAlive()) {
+            if (isDestroyed) {
                 if (trashArray.get(i).wasHitByBullet()) {
-                    gameSession.destructionRegistration();
+                    gameSession.destructionRegistration(doubleScore);
                 }
                 if (myGdxGame.audioManager.isSoundOn) myGdxGame.audioManager.explosionSound.play(0.2f);
             }
+
+            if (isMissed) gameSession.missedTrashRegistration();
 
             if (hasToBeDestroyed) {
                 TrashObject trash = trashArray.get(i);
@@ -280,7 +288,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void spawnFallingObject() {
-        if (MathUtils.random() < 0.1f) {
+        if (MathUtils.random() < 0.2f) {
             heartArray.add(new HeartObject(
                     GameSettings.HEART_WIDTH,
                     GameSettings.HEART_HEIGHT,
@@ -334,6 +342,8 @@ public class GameScreen extends ScreenAdapter {
 
         resultSaved = false;
         nameRequested = false;
+        doubleScoreActive = false;
+        scoreTextView.setColor(Color.WHITE);
         gameSession.startGame();
     }
 
