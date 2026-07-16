@@ -19,6 +19,10 @@ public class GameSettings {
     public static long STARTING_TRASH_APPEARANCE_COOL_DOWN = 2000; // in [ms] - milliseconds
     public static int BULLET_VELOCITY = 200; // in [m/s] - meter per second
     public static int SHOOTING_COOL_DOWN = 1000; // in [ms] - milliseconds
+    public static final float HEART_SPAWN_CHANCE = 0.2f;
+    public static final float WILD_DEBRIS_SPAWN_CHANCE = 0.2f;
+    public static final float WILD_DEBRIS_HORIZONTAL_VELOCITY = 10;
+    public static final float WILD_DEBRIS_VERTICAL_VELOCITY = 22;
 
     public static final short TRASH_BIT = 2;
     public static final short SHIP_BIT = 4;

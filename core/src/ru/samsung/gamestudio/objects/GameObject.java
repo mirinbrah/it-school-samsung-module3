@@ -1,6 +1,7 @@
 package ru.samsung.gamestudio.objects;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -22,6 +23,7 @@ public class GameObject implements Disposable {
 
     public Body body;
     Texture texture;
+    private final Color tint = new Color(Color.WHITE);
 
     GameObject(String texturePath, int x, int y, int width, int height, short cBits, World world) {
         this.width = width;
@@ -33,11 +35,22 @@ public class GameObject implements Disposable {
     }
 
     public void draw(SpriteBatch batch) {
+        Color batchColor = batch.getColor();
+        float red = batchColor.r;
+        float green = batchColor.g;
+        float blue = batchColor.b;
+        float alpha = batchColor.a;
+        batch.setColor(tint);
         batch.draw(texture,
                 getX() - (width / 2f),
                 getY() - (height / 2f),
                 width,
                 height);
+        batch.setColor(red, green, blue, alpha);
+    }
+
+    protected void setTint(float red, float green, float blue, float alpha) {
+        tint.set(red, green, blue, alpha);
     }
 
     public void hit() {

@@ -15,6 +15,7 @@ import ru.samsung.gamestudio.objects.BulletObject;
 import ru.samsung.gamestudio.objects.HeartObject;
 import ru.samsung.gamestudio.objects.ShipObject;
 import ru.samsung.gamestudio.objects.TrashObject;
+import ru.samsung.gamestudio.objects.WildDebrisObject;
 
 import java.util.ArrayList;
 
@@ -242,13 +243,17 @@ public class GameScreen extends ScreenAdapter {
 
     private void updateTrash(boolean doubleScore) {
         for (int i = 0; i < trashArray.size(); i++) {
+            TrashObject trashObject = trashArray.get(i);
+            if (trashObject instanceof WildDebrisObject) {
+                ((WildDebrisObject) trashObject).updateDirection();
+            }
 
-            boolean isDestroyed = !trashArray.get(i).isAlive();
-            boolean isMissed = !isDestroyed && !trashArray.get(i).isInFrame();
+            boolean isDestroyed = !trashObject.isAlive();
+            boolean isMissed = !isDestroyed && !trashObject.isInFrame();
             boolean hasToBeDestroyed = isDestroyed || isMissed;
 
             if (isDestroyed) {
-                if (trashArray.get(i).wasHitByBullet()) {
+                if (trashObject.wasHitByBullet()) {
                     gameSession.destructionRegistration(doubleScore);
                 }
                 if (myGdxGame.audioManager.isSoundOn) myGdxGame.audioManager.explosionSound.play(0.2f);
@@ -257,9 +262,8 @@ public class GameScreen extends ScreenAdapter {
             if (isMissed) gameSession.missedTrashRegistration();
 
             if (hasToBeDestroyed) {
-                TrashObject trash = trashArray.get(i);
-                myGdxGame.world.destroyBody(trash.body);
-                trash.dispose();
+                myGdxGame.world.destroyBody(trashObject.body);
+                trashObject.dispose();
                 trashArray.remove(i--);
             }
         }
@@ -288,11 +292,21 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void spawnFallingObject() {
-        if (MathUtils.random() < 0.2f) {
+        float spawnRoll = MathUtils.random();
+        if (spawnRoll < GameSettings.HEART_SPAWN_CHANCE) {
             heartArray.add(new HeartObject(
                     GameSettings.HEART_WIDTH,
                     GameSettings.HEART_HEIGHT,
                     GameResources.LIVE_IMG_PATH,
+                    myGdxGame.world
+            ));
+            return;
+        }
+        if (spawnRoll < GameSettings.HEART_SPAWN_CHANCE + GameSettings.WILD_DEBRIS_SPAWN_CHANCE) {
+            trashArray.add(new WildDebrisObject(
+                    GameSettings.TRASH_WIDTH,
+                    GameSettings.TRASH_HEIGHT,
+                    GameResources.TRASH_IMG_PATH,
                     myGdxGame.world
             ));
             return;
