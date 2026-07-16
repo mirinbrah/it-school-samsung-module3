@@ -9,12 +9,16 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Disposable;
 import ru.samsung.gamestudio.GameSettings;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static ru.samsung.gamestudio.GameSettings.SCALE;
 
-public class GameObject implements Disposable {
+public class GameObject {
+
+    private static final Map<String, Texture> TEXTURES = new HashMap<>();
 
     public short cBits;
 
@@ -30,7 +34,7 @@ public class GameObject implements Disposable {
         this.height = height;
         this.cBits = cBits;
 
-        texture = new Texture(texturePath);
+        texture = TEXTURES.computeIfAbsent(texturePath, Texture::new);
         body = createBody(x, y, world);
     }
 
@@ -54,12 +58,11 @@ public class GameObject implements Disposable {
     }
 
     public void hit() {
-        // all physics objects could be hit
     }
 
-    @Override
-    public void dispose() {
-        texture.dispose();
+    public static void disposeTextures() {
+        for (Texture texture : TEXTURES.values()) texture.dispose();
+        TEXTURES.clear();
     }
 
     public int getX() {

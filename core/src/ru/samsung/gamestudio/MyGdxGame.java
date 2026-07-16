@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import ru.samsung.gamestudio.managers.AudioManager;
+import ru.samsung.gamestudio.objects.GameObject;
 import ru.samsung.gamestudio.screens.GameScreen;
 import ru.samsung.gamestudio.screens.MenuScreen;
 import ru.samsung.gamestudio.screens.RecordsScreen;
@@ -85,6 +86,7 @@ public class MyGdxGame extends Game {
         commonWhiteFont.dispose();
         commonBlackFont.dispose();
         audioManager.dispose();
+        GameObject.disposeTextures();
         world.dispose();
         batch.dispose();
     }

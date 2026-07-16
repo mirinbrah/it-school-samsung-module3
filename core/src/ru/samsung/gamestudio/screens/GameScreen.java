@@ -120,6 +120,11 @@ public class GameScreen extends ScreenAdapter {
 
         handleInput();
 
+        if (gameSession.state == GameState.PLAYING && !shipObject.isAlive()) {
+            explosionView.start(shipObject.getX(), shipObject.getY());
+            gameSession.endGame();
+        }
+
         if (gameSession.state == GameState.PLAYING) {
             doubleScoreActive = shipObject.getY() > GameSettings.SCREEN_HEIGHT / 3f;
             gameSession.updateScore(doubleScoreActive);
@@ -138,11 +143,6 @@ public class GameScreen extends ScreenAdapter {
                 );
                 bulletArray.add(laserBullet);
                 if (myGdxGame.audioManager.isSoundOn) myGdxGame.audioManager.shootSound.play();
-            }
-
-            if (!shipObject.isAlive()) {
-                explosionView.start(shipObject.getX(), shipObject.getY());
-                gameSession.endGame();
             }
 
             updateTrash(doubleScoreActive);
@@ -263,7 +263,6 @@ public class GameScreen extends ScreenAdapter {
 
             if (hasToBeDestroyed) {
                 myGdxGame.world.destroyBody(trashObject.body);
-                trashObject.dispose();
                 trashArray.remove(i--);
             }
         }
@@ -274,7 +273,6 @@ public class GameScreen extends ScreenAdapter {
             if (bulletArray.get(i).hasToBeDestroyed()) {
                 BulletObject bullet = bulletArray.get(i);
                 myGdxGame.world.destroyBody(bullet.body);
-                bullet.dispose();
                 bulletArray.remove(i--);
             }
         }
@@ -285,7 +283,6 @@ public class GameScreen extends ScreenAdapter {
             HeartObject heart = heartArray.get(i);
             if (heart.isCollected() || !heart.isInFrame()) {
                 myGdxGame.world.destroyBody(heart.body);
-                heart.dispose();
                 heartArray.remove(i--);
             }
         }
@@ -324,26 +321,22 @@ public class GameScreen extends ScreenAdapter {
         for (int i = 0; i < trashArray.size(); i++) {
             TrashObject trash = trashArray.get(i);
             myGdxGame.world.destroyBody(trash.body);
-            trash.dispose();
             trashArray.remove(i--);
         }
 
         if (shipObject != null) {
             myGdxGame.world.destroyBody(shipObject.body);
-            shipObject.dispose();
         }
 
         for (int i = 0; i < bulletArray.size(); i++) {
             BulletObject bullet = bulletArray.get(i);
             myGdxGame.world.destroyBody(bullet.body);
-            bullet.dispose();
             bulletArray.remove(i--);
         }
 
         for (int i = 0; i < heartArray.size(); i++) {
             HeartObject heart = heartArray.get(i);
             myGdxGame.world.destroyBody(heart.body);
-            heart.dispose();
             heartArray.remove(i--);
         }
 
@@ -388,11 +381,6 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        shipObject.dispose();
-        for (TrashObject trash : trashArray) trash.dispose();
-        for (BulletObject bullet : bulletArray) bullet.dispose();
-        for (HeartObject heart : heartArray) heart.dispose();
-
         backgroundView.dispose();
         topBlackoutView.dispose();
         liveView.dispose();
